@@ -1,12 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
+import App from './components/App';
 
-const Root = () => {
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache(),
+});
+
+function Root() {
   return (
-    <div>
-      Auth Starter
-    </div>
+    <ApolloProvider client={client}>
+      {/* <App /> */}
+      <div>Hello</div>
+    </ApolloProvider>
   );
-};
+}
 
 ReactDOM.render(<Root />, document.querySelector('#root'));
