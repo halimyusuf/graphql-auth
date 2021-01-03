@@ -14,7 +14,6 @@ function Root() {
   return (
     <ApolloProvider client={client}>
       <App />
-      <div>Hello</div>
     </ApolloProvider>
   );
 }
