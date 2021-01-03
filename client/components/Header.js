@@ -1,35 +1,50 @@
 import React from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { createHashHistory } from 'history';
+import history from './CustomHistory';
 import logoutMutation from '../queries/logout';
 import UserQuery from '../queries/currentUser';
 
 const Header = (props) => {
-  const history = createHashHistory();
   const [logout, { data }] = useMutation(logoutMutation);
-  const { loading, error, data: userData } = useQuery(UserQuery);
+  const { loading, error, data: userData, refetch } = useQuery(UserQuery);
   console.log(loading, userData);
   console.log(data);
 
   return (
     <nav>
-      <div className='nav-wrapper'>
-        <a href='#' onClick={() => history.push('/')} className='brand-logo'>
-          Logo
-        </a>
-        <ul id='nav-mobile' className='right'>
-          <li>
-            <a href='#' onClick={() => history.go('/login')}>
-              Login
-            </a>
-          </li>
-          <li>
-            <a href='#' onClick={() => logout()}>
-              Logout
-            </a>
-          </li>
-        </ul>
-      </div>
+      {!loading && (
+        <div className='nav-wrapper'>
+          <a href='#' onClick={() => history.push('/')} className='brand-logo'>
+            Logo
+          </a>
+          <ul id='nav-mobile' className='right'>
+            {!userData.user && (
+              <li>
+                <a onClick={() => history.push('login')}>Login</a>
+              </li>
+            )}
+
+            {!userData.user && (
+              <li>
+                <a onClick={() => history.push('signup')}>Sign up</a>
+              </li>
+            )}
+
+            {userData.user && (
+              <li>
+                <a
+                  href='#'
+                  onClick={() => {
+                    logout().then(() => refetch());
+                  }}
+                >
+                  Logout
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
     </nav>
   );
 };
